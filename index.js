@@ -45,6 +45,7 @@ bot.on('callback_query:data', async ctx=>{
   const chatID = ctx.update.callback_query.message.chat.id;
   const msgID = ctx.update.callback_query.message.message_id;
   let data = ctx.callbackQuery.data;
+  let stickerToken = "CAACAgIAAxkBAAIK9GMINLdux4Ak-FvCdMgWzfhD120KAAJ2AANBqK4GssoUFC9GDaspBA";
 
   if(data === "countUp"){
     toolsCount++;
@@ -55,8 +56,9 @@ bot.on('callback_query:data', async ctx=>{
     bot.api.deleteMessage(chatID, msgID);
     await ctx.reply(`Готово всего: ${toolsCount}`, {reply_markup: countKeyboard});
   }else if(data === "getWriteToolsNumber"){
+    bot.api.deleteMessage(chatID, msgID);
     tableInfo.getWriteToTable(toolsCount);
-    await bot.api.sendSticker(chatID, "CAACAgIAAxkBAAIK9GMINLdux4Ak-FvCdMgWzfhD120KAAJ2AANBqK4GssoUFC9GDaspBA")
+    await bot.api.sendSticker(chatID, stickerToken)
     await ctx.reply(`Готово всего: ${toolsCount}`, {reply_markup: countKeyboard});    
   }else if(data ==="dropCount"){
     ctx.reply("Чувак, ты уверен?",{reply_markup: dropCountMenu})
@@ -66,6 +68,8 @@ bot.on('callback_query:data', async ctx=>{
     toolsCount = tableInfo.numberToolsCell;
     ctx.reply("Значение счетчика обнулено");
     ctx.reply(`Готово всего: ${toolsCount}`, {reply_markup: countKeyboard})
+  }else if(data ==="dropCountNope"){
+    bot.api.deleteMessage(chatID, msgID);
   }
 })
 
